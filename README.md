@@ -2,6 +2,16 @@
 
 **A fault-tolerant distributed object storage system featuring a central FastAPI Master Coordinator, independent Storage Node servers, Round-Robin chunk placement, configurable replication, SHA-256 integrity verification, automatic failure recovery, and a dark-themed React + TypeScript Control Plane.**
 
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688?style=flat&logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6.0.5-646CFF?style=flat&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.0-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-WAL-003B57?style=flat&logo=sqlite&logoColor=white)
+![Pytest](https://img.shields.io/badge/Pytest-8.3.4-0A9EDC?style=flat&logo=pytest&logoColor=white)
+![License](https://img.shields.io/badge/License-No%20License-64748B?style=flat)
+
 ### Project Highlights
 
 - **Decoupled Master–Worker Architecture:** Independent HTTP Storage Nodes coordinated by a persistent SQLite-backed Master Node.
@@ -102,12 +112,12 @@ flowchart TB
 
 ### Backend Technologies
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![Uvicorn](https://img.shields.io/badge/Uvicorn-0.34.0-2F334D?style=for-the-badge)
-![HTTPX](https://img.shields.io/badge/HTTPX-0.28.1-1F2937?style=for-the-badge)
-![Pydantic](https://img.shields.io/badge/Pydantic-2.10.4-E92063?style=for-the-badge&logo=pydantic&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-WAL%20Mode-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688?style=flat&logo=fastapi&logoColor=white)
+![Uvicorn](https://img.shields.io/badge/Uvicorn-0.34.0-2F334D?style=flat)
+![HTTPX](https://img.shields.io/badge/HTTPX-0.28.1-1F2937?style=flat)
+![Pydantic](https://img.shields.io/badge/Pydantic-2.10.4-E92063?style=flat&logo=pydantic&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-WAL%20Mode-003B57?style=flat&logo=sqlite&logoColor=white)
 
 - **Python (`3.11+`):** Core backend runtime powering both the Master Coordinator and Storage Node services (`asyncio`, `hashlib`, `sqlite3`, `shutil`, `pathlib`).
 - **FastAPI (`0.115.6`):** REST API framework exposing Master Coordinator (`/upload`, `/files`, `/nodes`, `/stats`, `/system/events`, `/settings`) and Storage Node (`/chunks`, `/health`, `/stats`) endpoints with OpenAPI/Swagger docs.
@@ -120,12 +130,12 @@ flowchart TB
 
 ### Frontend Technologies
 
-![React](https://img.shields.io/badge/React-18.3.1-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-6.0.5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![Lucide](https://img.shields.io/badge/Lucide%20React-0.469.0-F56565?style=for-the-badge&logo=lucide&logoColor=white)
-![Recharts](https://img.shields.io/badge/Recharts-2.15.0-22B5BF?style=for-the-badge)
+![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6.0.5-646CFF?style=flat&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.0-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![Lucide](https://img.shields.io/badge/Lucide%20React-0.469.0-F56565?style=flat&logo=lucide&logoColor=white)
+![Recharts](https://img.shields.io/badge/Recharts-2.15.0-22B5BF?style=flat)
 
 - **React (`18.3.1`):** Component-based UI framework driving the Distributed Storage Control Plane SPA.
 - **TypeScript (`~5.6.2`):** Static type safety across API contracts (`src/types/dfs.ts`), reusable UI components, and pages.
@@ -145,11 +155,11 @@ flowchart TB
 
 ### Development & Testing Tools
 
-![Pytest](https://img.shields.io/badge/Pytest-8.3.4-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
-![Pytest-Asyncio](https://img.shields.io/badge/Pytest--Asyncio-0.25.0-0284C7?style=for-the-badge)
-![npm](https://img.shields.io/badge/npm-Package%20Manager-CB3837?style=for-the-badge&logo=npm&logoColor=white)
-![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?style=for-the-badge&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)
+![Pytest](https://img.shields.io/badge/Pytest-8.3.4-0A9EDC?style=flat&logo=pytest&logoColor=white)
+![Pytest-Asyncio](https://img.shields.io/badge/Pytest--Asyncio-0.25.0-0284C7?style=flat)
+![npm](https://img.shields.io/badge/npm-Package%20Manager-CB3837?style=flat&logo=npm&logoColor=white)
+![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?style=flat&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=flat&logo=github&logoColor=white)
 
 - **Pytest (`8.3.4`) & Pytest-Asyncio (`0.25.0`):** Automated unit and live multi-node HTTP integration test suite (`tests/`).
 - **PowerShell:** Windows cluster launch and shutdown orchestration (`scripts/start_cluster.ps1`, `scripts/stop_cluster.ps1`).
