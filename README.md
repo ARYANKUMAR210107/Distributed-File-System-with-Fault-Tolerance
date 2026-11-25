@@ -2,6 +2,13 @@
 
 **A fault-tolerant distributed object storage system featuring a central FastAPI Master Coordinator, independent Storage Node servers, Round-Robin chunk placement, configurable replication, SHA-256 integrity verification, automatic failure recovery, and a dark-themed React + TypeScript Control Plane.**
 
+### Project Highlights
+
+- **Decoupled Master–Worker Architecture:** Independent HTTP Storage Nodes coordinated by a persistent SQLite-backed Master Node.
+- **Verified Data Integrity:** Per-chunk and full-file SHA-256 verification across uploads, active integrity probes, and reassembly.
+- **Automated Fault Tolerance:** Health monitoring (`online → degraded → offline`), transparent replica failover on read, and locked background re-replication.
+- **Engineering Control Plane:** Real-time React + TypeScript + Recharts console for cluster telemetry, chunk topology, node inspection, and event auditing.
+
 ---
 
 ## Table of Contents
@@ -11,19 +18,20 @@
 3. [Architecture](#architecture)
 4. [Architecture Diagram](#architecture-diagram)
 5. [Technology Stack](#technology-stack)
-6. [Project Structure](#project-structure)
-7. [Installation (Windows)](#installation-windows)
-8. [Running the Project](#running-the-project)
-9. [Dashboard](#dashboard)
-10. [API Documentation](#api-documentation)
-11. [File Storage Workflow](#file-storage-workflow)
-12. [Fault Tolerance](#fault-tolerance)
-13. [Testing](#testing)
-14. [Screenshots](#screenshots)
-15. [Limitations](#limitations)
-16. [Future Improvements](#future-improvements)
-17. [License](#license)
-18. [Author](#author)
+6. [Technology Integration](#technology-integration)
+7. [Project Structure](#project-structure)
+8. [Installation (Windows)](#installation-windows)
+9. [Running the Project](#running-the-project)
+10. [Dashboard Features](#dashboard-features)
+11. [API Documentation](#api-documentation)
+12. [File Storage Workflow](#file-storage-workflow)
+13. [Fault Tolerance](#fault-tolerance)
+14. [Testing](#testing)
+15. [Screenshots](#screenshots)
+16. [Limitations](#limitations)
+17. [Future Improvements](#future-improvements)
+18. [License](#license)
+19. [Author](#author)
 
 ---
 
@@ -92,23 +100,83 @@ flowchart TB
 
 ## Technology Stack
 
-**Backend:**
-- Python 3.11+ (verified on Python 3.13.14)
-- FastAPI (`0.115.6`) & Uvicorn (`0.34.0`)
-- HTTPX (`0.28.1`)
-- Pydantic (`2.10.4`) & Pydantic Settings (`2.7.1`)
-- `python-multipart` (`0.0.20`)
-- SQLite3 (Python standard library, WAL mode)
+### Backend Technologies
 
-**Frontend:**
-- React (`18.3.1`) & TypeScript (`~5.6.2`)
-- Vite (`6.0.5`)
-- Tailwind CSS (`4.0.0`, `@tailwindcss/vite`)
-- Recharts (`2.15.0`)
-- Lucide React (`0.469.0`)
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Uvicorn](https://img.shields.io/badge/Uvicorn-0.34.0-2F334D?style=for-the-badge)
+![HTTPX](https://img.shields.io/badge/HTTPX-0.28.1-1F2937?style=for-the-badge)
+![Pydantic](https://img.shields.io/badge/Pydantic-2.10.4-E92063?style=for-the-badge&logo=pydantic&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-WAL%20Mode-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
-**Testing:**
-- Pytest (`8.3.4`) & Pytest-Asyncio (`0.25.0`)
+- **Python (`3.11+`):** Core backend runtime powering both the Master Coordinator and Storage Node services (`asyncio`, `hashlib`, `sqlite3`, `shutil`, `pathlib`).
+- **FastAPI (`0.115.6`):** REST API framework exposing Master Coordinator (`/upload`, `/files`, `/nodes`, `/stats`, `/system/events`, `/settings`) and Storage Node (`/chunks`, `/health`, `/stats`) endpoints with OpenAPI/Swagger docs.
+- **Uvicorn (`0.34.0`):** ASGI server hosting the Master Node (`:8000`) and each independent Storage Node (`:8001`–`:8003`).
+- **HTTPX (`0.28.1`):** Pooled async HTTP client (`NodeClient`) used by the Master Node for chunk uploads/downloads/deletes and health probes with timeouts and retries.
+- **Pydantic (`2.10.4`) & Pydantic Settings (`2.7.1`):** Strict request/response validation and environment-based configuration (`MasterSettings`, `StorageNodeSettings`).
+- **Python-Multipart (`0.0.20`):** Multipart form parsing for file and chunk uploads.
+- **SQLite3 (WAL Mode):** Persistent metadata engine (`data/dfs_metadata.db`) storing nodes, files, chunks, replica locations, settings, and `system_events`.
+- **SHA-256 (`hashlib.sha256`):** End-to-end cryptographic checksums verifying full files and individual chunks on upload, download, and active integrity probes.
+
+### Frontend Technologies
+
+![React](https://img.shields.io/badge/React-18.3.1-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6.0.5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Lucide](https://img.shields.io/badge/Lucide%20React-0.469.0-F56565?style=for-the-badge&logo=lucide&logoColor=white)
+![Recharts](https://img.shields.io/badge/Recharts-2.15.0-22B5BF?style=for-the-badge)
+
+- **React (`18.3.1`):** Component-based UI framework driving the Distributed Storage Control Plane SPA.
+- **TypeScript (`~5.6.2`):** Static type safety across API contracts (`src/types/dfs.ts`), reusable UI components, and pages.
+- **Vite (`6.0.5`):** Fast local dev server (`:5173`) and production bundler (`tsc -b && vite build`).
+- **Tailwind CSS (`4.0.0`):** Utility-first styling (`@tailwindcss/vite`) powering the dark infrastructure-console layout.
+- **Lucide React (`0.469.0`):** Consistent iconography across navigation, status indicators, and actions.
+- **Recharts (`2.15.0`):** Responsive bar visualizations for primary/replica chunk distribution, probe latency, and recorded event counts.
+
+### Distributed Storage Technologies & Concepts
+
+- **Master–Worker Architecture:** Central coordinator (`master/app.py`) decoupled from independent worker processes (`storage_node/app.py`).
+- **File Chunking & Deterministic IDs:** `split_file_into_chunks()` slices payloads into configurable chunks (`<file_id>_c<index:05d>`) and `reconstruct_chunks()` reassembles them in exact order.
+- **Round-Robin Distribution:** `RoundRobinDistributor` balances primary chunk placement across sorted `online` Storage Nodes.
+- **Distinct-Node Replication:** Enforces configurable replication factor (default `2`) across distinct nodes via both placement logic and `UNIQUE(chunk_id, node_id)` in SQLite.
+- **Health Monitoring & Failure Detection:** `HealthMonitor` polls nodes with a `5s` startup grace delay and 1 transient retry, transitioning nodes cleanly across `online` → `degraded` → `offline` (`3` consecutive misses).
+- **Replica Failover & Re-Replication:** `FileService.download_file()` fails over automatically to healthy replicas when a node is unreachable or returns corrupted bytes; `Replicator` (guarded by `asyncio.Lock` and a `60s` cooldown) copies under-replicated chunks to healthy nodes.
+
+### Development & Testing Tools
+
+![Pytest](https://img.shields.io/badge/Pytest-8.3.4-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
+![Pytest-Asyncio](https://img.shields.io/badge/Pytest--Asyncio-0.25.0-0284C7?style=for-the-badge)
+![npm](https://img.shields.io/badge/npm-Package%20Manager-CB3837?style=for-the-badge&logo=npm&logoColor=white)
+![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)
+
+- **Pytest (`8.3.4`) & Pytest-Asyncio (`0.25.0`):** Automated unit and live multi-node HTTP integration test suite (`tests/`).
+- **PowerShell:** Windows cluster launch and shutdown orchestration (`scripts/start_cluster.ps1`, `scripts/stop_cluster.ps1`).
+- **npm & Vite Build Tools:** Frontend dependency management, TypeScript checking (`tsc -b`), and bundling.
+- **Git & GitHub:** Version control and source hosting.
+
+### Technology Summary
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| **Backend** | Python 3.11+, FastAPI, Uvicorn, HTTPX, Pydantic | Master coordinator REST APIs, chunking, Round-Robin placement, health checks, and async node communication |
+| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS v4, Lucide React, Recharts | Distributed Storage Control Plane dashboard, XHR upload progress, charts, and topology views |
+| **Metadata** | SQLite3 (WAL mode) | Persistent storage for registered nodes, file/chunk metadata, replica locations, settings, and `system_events` |
+| **Storage** | FastAPI Storage Nodes (`ChunkStore` + `os.replace`) | Independent node servers persisting `.bin` chunk payloads and `.meta.json` sidecars atomically on local disk |
+| **Integrity** | SHA-256 (`hashlib.sha256`) | Per-chunk and full-file checksum verification during upload, active integrity probes, and reconstruction |
+| **Testing** | Pytest, Pytest-Asyncio | Automated unit and live multi-server integration tests covering failover, corruption detection, and restarts |
+| **Build** | npm, Vite (`6.0.5`), TypeScript (`tsc -b`) | Frontend compilation, type checking, and production asset bundling |
+
+---
+
+## Technology Integration
+
+- **Coordinator & API Exposure:** **FastAPI** and **Uvicorn** serve the Master Node (`127.0.0.1:8000`) and each Storage Node (`:8001`–`:8003`). Incoming uploads hit `POST /upload`, where `FileService` validates filenames/sizes, computes full-file SHA-256, and splits data into chunks.
+- **Chunk Placement & Storage Node Persistence:** `RoundRobinDistributor` picks distinct `online` nodes for each chunk's primary and replicas. **HTTPX** (`NodeClient`) transfers chunks via `POST /chunks`, and each Storage Node's `ChunkStore` verifies the SHA-256 hash and writes `<chunk_id>.bin` + `<chunk_id>.meta.json` atomically.
+- **Metadata & Replica Management:** `MetadataDB` commits file, chunk, and `chunk_locations` rows in **SQLite** (WAL mode). `HealthMonitor` polls nodes periodically, while `Replicator` queries `get_under_replicated_chunks()` and copies verified bytes from healthy nodes to available `online` nodes when nodes go offline.
+- **Dashboard Communication:** The **React + TypeScript** Control Plane (`src/services/api.ts`) polls `/health`, `/stats`, `/nodes`, `/files`, and `/system/events` every `5s`, uses `XMLHttpRequest` for real upload progress, and renders node health, primary/replica distribution, and audit logs with **Recharts** and **Lucide React**.
+- **System Validation:** **Pytest** spins up temporary directories and real Uvicorn Storage Node + Master instances (`tests/test_integration.py`) to verify chunking, replication, failover, corruption detection, Master restart persistence, and deletion end-to-end.
 
 ---
 
@@ -237,7 +305,7 @@ npm run dev
 
 ---
 
-## Dashboard
+## Dashboard Features
 
 The **Distributed Storage Control Plane** organizes cluster operations into four sections:
 
