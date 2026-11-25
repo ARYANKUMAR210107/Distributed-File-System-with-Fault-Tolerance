@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime data, databases, PIDs, and logs
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/*.sqlite*
+data/cluster_pids.json
+*.log
+logs/
+tmp/
+temp/
+
+# Storage Node runtime chunk directories (preserve empty node folders via .gitkeep)
+storage/*
+!storage/node1/
+storage/node1/*
+!storage/node1/.gitkeep
+!storage/node2/
+storage/node2/*
+!storage/node2/.gitkeep
+!storage/node3/
+storage/node3/*
+!storage/node3/.gitkeep
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
